@@ -21,8 +21,10 @@ class ViewController: UIViewController ,CBPeripheralManagerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-      // Define in iBeacon.swift
-      self.setupBeacon()
+      // Define in iBeacon.swift locationmanager.delegate = self
+            locationManager.delegate = self
+            locationManager.requestWhenInUseAuthorization()
+            self.setupBeacon()
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,16 +55,22 @@ extension ViewController: CLLocationManagerDelegate {
             locationManager.delegate = self
             
             // Enter Your iBeacon UUID
-            let uuid = NSUUID(uuidString: "bebbf6eb-a2cb-47be-aec5-8bb6a2c8ffda")!
+           // let uuid = NSUUID(uuidString: "bebbf6eb-a2cb-47be-aec5-8bb6a2c8ffda")!
+         //   let uuid = NSUUID(uuidString: "37F8E091-26D9-4B92-8646-3AE9665288B6")!
             
             // Use identifier like your company name or website
+            let uuid = UUID(uuid: UIDevice.current.identifierForVendor!.uuid)
+            
+                print(uuid)
+            
             let identifier = "com.alphansotech"
             
             let Major:CLBeaconMajorValue = 100
             let Minor:CLBeaconMinorValue = 1
             
-            let beaconRegion = CLBeaconRegion(proximityUUID: uuid as UUID, major: Major, minor: Minor, identifier: identifier)
+            let beaconRegion = CLBeaconRegion(proximityUUID: uuid , major: Major, minor: Minor, identifier: identifier)
             
+            print("beaconRegion\(beaconRegion)")
             // called delegate when Enter iBeacon Range
             beaconRegion.notifyOnEntry = true
             
@@ -72,9 +80,11 @@ extension ViewController: CLLocationManagerDelegate {
             // Requests permission to use location services
             locationManager.requestAlwaysAuthorization()
             
+            locationManager.requestState(for: beaconRegion)
             // Starts monitoring the specified iBeacon Region
             locationManager.startMonitoring(for: beaconRegion)
-            locationManager.pausesLocationUpdatesAutomatically = false
+            locationManager.startRangingBeacons(in: beaconRegion)
+            //locationManager.pausesLocationUpdatesAutomatically = false
         }
     
     private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -102,6 +112,7 @@ extension ViewController: CLLocationManagerDelegate {
             // handle .NotDetermined here
             
             // The user has not yet made a choice regarding whether this app can use location services.
+             simpleAlert(title: "Permission Error", message: "Not Choosen")
             break
         }
     }
@@ -166,7 +177,7 @@ extension ViewController: CLLocationManagerDelegate {
             
             if let closestBeacon = foundBeacons[0] as? CLBeacon {
                     
-                    var proximityMessage: String!
+                    let proximityMessage: String!
                 if lastStage != closestBeacon.proximity {
                     
                     lastStage = closestBeacon.proximity
@@ -196,12 +207,19 @@ extension ViewController: CLLocationManagerDelegate {
                     makeString += "Identifier = (region.identifier)n"
                     makeString += "Major Value = (closestBeacon.major.intValue)n"
                     makeString += "Minor Value = (closestBeacon.minor.intValue)n"
-                    makeString += "Distance From iBeacon = (proximityMessage)"
+                    makeString += "Distance From iBeacon = \(String(describing: proximityMessage))"
 
                     self.beaconStatus.text = makeString
               }
             }
         }
     }
-
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        print("Monitoring failed for region with identifier: \(String(describing: region)) \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+      print("Location manager failed: \(error.localizedDescription)")
+    }
+    
 }
