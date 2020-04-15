@@ -60,13 +60,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Need permission to spot iBeacons</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Program requires GPS to track cars and job orders</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Program requires GPS to track cars and job orders</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Program requires GPS to track cars and job orders</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Program requires GPS to track for iBeacons</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Program requires GPS to track for iBeacons</string>
+	<key>Location When In Use Usage Description</key>
+	<string>Program requires GPS to track for iBeacons</string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Our app uses bluetooth to find, connect and transfer data between different devices like iBeacons</string>
 </dict>
 </plist>
