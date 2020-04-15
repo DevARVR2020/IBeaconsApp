@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import CoreBluetooth
 
-class ViewController: UIViewController ,CBPeripheralManagerDelegate{
+class ViewController: UIViewController ,CBPeripheralManagerDelegate,UITextFieldDelegate{
     
      // MARK: - IBOutlets
     @IBOutlet weak var searchButton: UIButton!
